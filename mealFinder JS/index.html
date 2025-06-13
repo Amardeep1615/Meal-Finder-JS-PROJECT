@@ -8,7 +8,7 @@
     * {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      box-sizing: border-box; 
     }
 
     body {
@@ -35,7 +35,7 @@
 
     .menu-icon {
       font-size: 1.8rem;
-      color: orange;
+      color: white;
       cursor: pointer;
     }
 
@@ -58,24 +58,113 @@
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
+    }    
+   
+    /* Hamburger Menu Styles */
+    .hamburger-menu {
+      font-size: 24px;
+      cursor: pointer;
+      padding: 10px;
+      color: white; /* Changed to match header */
+      background: transparent; /* Changed from #f0f0f0 to transparent */
+      display: inline-block;
     }
+
+    /* Categories List (Initially Hidden) */
+    .categories-list {
+      display: none;
+      margin-left: 40px;
+      position: absolute;
+      right: 0rem;
+      top: 0rem;
+      background: #f9f9f9;
+      padding: 30px;
+      width: 300px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    .closeIcon {
+      position: absolute;
+      right: 1rem;
+      top: 0.5rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+      z-index: 1001;
+    }
+    .closeIcon:hover {
+      color: #333;
+    }
+    .categories-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .categories-list li {
+      padding: 1rem ;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+      color: #333; /* Added for better contrast */
+    }
+
+    .categories-list li:hover {
+      background: #e0e0e0;
+    }
+
+    /* Show the list when active */
+    .categories-list.active {
+      display: block;
+    }
+</style>
+
   </style>
 </head>
 <body>
-
+ 
   <header>
     <nav>
       <div class="logo">Meal Finder</div>
-      <div class="menu-icon">&#9776;</div> <!-- Hamburger Icon -->
+      <div class="menu-icon" id="hamburgerMenu">&#9776;</div> <!-- Hamburger Icon -->
+        <div class="categories-list" id="categoriesList">
+          <div class="closeIcon" id="closeIcon">x</div>
+    <ul style="list-style: none;">
+      <li>Beef</li>
+      <li>Chicken</li>
+      <li>Dessert</li>
+      <li>Lamb</li>
+      <li>Miscellaneous</li>
+      <li>Pasta</li>
+      <li>Pork</li>
+      <li>Seafood</li>
+      <li>Side</li>
+      <li>Starter</li>
+      <li>Vegan</li>
+      <li>Vegetarian</li>
+      <li>Breakfast</li>
+      <li>Goat</li>
+    </ul>
+  </div>
     </nav>
   </header>
 
-  <section>
-    <h2 style="margin-bottom: 1rem;">Breakfast Ideas</h2>
-    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg" alt="Breakfast" />
+  <section style="width: 100%; max-height: 500px; overflow:hidden;
+   
+  background: #f5f5f5; /* Fallback color */
+  margin-bottom: 2rem;">
+    <img src="./src/Assets/foodmeal.jpg" alt="Breakfast"  style="
+      width: 80%;
+      height: auto;
+      left: 50px;
+      min-height: 100px;
+  
+    " />
   </section>
 
   <footer>© 2025 Meal Finder. All rights reserved.</footer>
+  <script>
+
+  </script>
+  <script src="./script.js"></script>
 
 </body>
 </html>
