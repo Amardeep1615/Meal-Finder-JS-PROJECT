@@ -4,28 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Meal Finder</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box; 
-    }
 
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
     }
 
     header {
       background-color: orange;
-      padding: 1rem 2rem;
       color: white;
-    }
-
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .logo {
@@ -39,50 +35,23 @@
       cursor: pointer;
     }
 
-    section {
-      padding: 2rem;
-      background-color: #fff;
-      text-align: center;
-    }
-
-    section img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    footer {
-      background-color: #1a1a1a;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }    
-   
-    /* Hamburger Menu Styles */
-    .hamburger-menu {
-      font-size: 24px;
-      cursor: pointer;
-      padding: 10px;
-      color: white; /* Changed to match header */
-      background: transparent; /* Changed from #f0f0f0 to transparent */
-      display: inline-block;
-    }
-
-    /* Categories List (Initially Hidden) */
     .categories-list {
       display: none;
-      margin-left: 40px;
+      color: #181717;
       position: absolute;
-      right: 0rem;
-      top: 0rem;
-      background: #f9f9f9;
-      padding: 30px;
+      right: 0;
+      top: 0;
+      background: #ebeff2;
+      padding: 40px;
       width: 300px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      z-index: 100;
+      z-index: 1000;
     }
+
+    .categories-list.active {
+      display: block;
+    }
+
     .closeIcon {
       position: absolute;
       right: 1rem;
@@ -90,81 +59,575 @@
       font-size: 1.5rem;
       cursor: pointer;
       color: #666;
-      z-index: 1001;
-    }
-    .closeIcon:hover {
-      color: #333;
-    }
-    .categories-list ul {
-      list-style: none;
-      padding: 0;
     }
 
     .categories-list li {
-      padding: 1rem ;
+      padding: 1rem;
       border-bottom: 1px solid #ddd;
       cursor: pointer;
-      color: #333; /* Added for better contrast */
     }
 
     .categories-list li:hover {
       background: #e0e0e0;
     }
 
-    /* Show the list when active */
-    .categories-list.active {
-      display: block;
+    .hero-section {
+      position: relative;
+      margin-bottom: 0;
     }
-</style>
 
+    .hero-section img {
+      width: 100%;
+      max-height: 400px;
+    }
+
+    .search-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 25px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background-color: orange;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .search-button:hover {
+      background: #ff5252;
+      transform: scale(1.05);
+    }
+
+    .search-button:active {
+      transform: scale(0.95);
+    }
+
+    .hero-title {
+      font-size: 2rem;
+      margin-top: 10px;
+    }
+    
+    .meal-card {
+      width: calc(20% - 12px);
+      margin-bottom: 10px;
+    }
+
+    .card {
+      height: 150px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-img-top {
+      height: 110px;
+      width: 100%;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      margin-top: 10px;
+      border-radius: 1rem;
+      background-color: #fff;
+    }
+
+    .promo-banner {
+      font-size: 12px;
+      font-weight: bold;
+      background-color: #ff5252;
+      border-bottom-left-radius: 6px;
+      z-index: 10;
+    }
+
+    /* Meal Details Page Styles */
+    .meal-details-page {
+      display: none;
+      padding: 20px;
+    }
+
+    .meal-header {
+      background-color: orange;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .meal-content {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .meal-image {
+      flex: 1;
+    }
+
+    .meal-image img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .meal-info {
+      flex: 1;
+    }
+
+    .meal-info h2 {
+      color: orange;
+      margin-bottom: 15px;
+    }
+
+    .ingredients-box {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .measurements-box {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .back-button {
+      background-color: orange;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .back-button:hover {
+      background-color: #e69500;
+    }
+
+    @media (max-width: 992px) {
+      .meal-content {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .meal-card {
+        width: calc(50% - 12px);
+      }
+    }
+
+    @media (max-width: 576px) {
+      .meal-card {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
- 
-  <header>
-    <nav>
+
+  <!-- Header -->
+  <header class="py-3 px-4">
+    <nav class="d-flex justify-content-between align-items-center">
       <div class="logo">Meal Finder</div>
-      <div class="menu-icon" id="hamburgerMenu">&#9776;</div> <!-- Hamburger Icon -->
-        <div class="categories-list" id="categoriesList">
-          <div class="closeIcon" id="closeIcon">x</div>
-    <ul style="list-style: none;">
-      <li>Beef</li>
-      <li>Chicken</li>
-      <li>Dessert</li>
-      <li>Lamb</li>
-      <li>Miscellaneous</li>
-      <li>Pasta</li>
-      <li>Pork</li>
-      <li>Seafood</li>
-      <li>Side</li>
-      <li>Starter</li>
-      <li>Vegan</li>
-      <li>Vegetarian</li>
-      <li>Breakfast</li>
-      <li>Goat</li>
-    </ul>
-  </div>
+      <div class="menu-icon" id="hamburgerMenu">&#9776;</div>
+      <div class="categories-list" id="categoriesList">
+        <div class="closeIcon" id="closeIcon">x</div>
+        <ul class="list-unstyled mt-4">
+          <li>Beef</li><li>Chicken</li><li>Dessert</li><li>Lamb</li>
+          <li>Miscellaneous</li><li>Pasta</li><li>Pork</li><li>Seafood</li>
+          <li>Side</li><li>Starter</li><li>Vegan</li><li>Vegetarian</li>
+          <li>Breakfast</li><li>Goat</li>
+        </ul>
+      </div>
     </nav>
   </header>
 
-  <section style="width: 100%; max-height: 500px; overflow:hidden;
-   
-  background: #f5f5f5; /* Fallback color */
-  margin-bottom: 2rem;">
-    <img src="./src/Assets/foodmeal.jpg" alt="Breakfast"  style="
-      width: 80%;
-      height: auto;
-      left: 50px;
-      min-height: 100px;
-  
-    " />
+  <section class="hero-section">
+    <img src="./src/Assets/foodmeal.jpg" alt="Breakfast" class="img-fluid d-block w-100" />
+
+    <div class="search-overlay">
+      <div class="search-container">
+        <input type="text" placeholder="Search recipes..." class="search-input" id="search-input"/>
+        <button class="search-button" id="search-button" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg"
+               width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="10" cy="10" r="7"></circle>
+            <line x1="21" y1="21" x2="15" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hero-title mt-4">
+        <h2>What are your Favourite Cuisines?</h2>
+      </div>
+      <div class="hero-title mt-4 text-white"><h2 class="fs-6 fw-light">PERSONALIZE YOUR EXPERIENCE</h2></div>
+    </div>
   </section>
 
-  <footer>© 2025 Meal Finder. All rights reserved.</footer>
-  <script>
+  <!-- Categories Section -->
+  <section class="container my-5" id="categoriesSection">
+    <div class="mt-5">
+      <h1 class="px-3 fs-3 fw-bold">
+        C A T E G O R I E S
+        <span style="position: absolute; display: flex; flex-direction: column; height: 5px; width: 30%; background-color: red; margin-top: 10px;"></span>
+      </h1>
+    </div>
+    <h3 class="text-center mb-4">Available Categories</h3>
+    <div class="row" id="mealContainer"></div>
+  </section>
 
+  <!-- Meal Details Page -->
+  <section class="container my-5 meal-details-page" id="mealDetailsPage">
+    <button class="back-button" id="backButton">← Back to Categories</button>
+    
+    <div class="meal-header">
+      <h1 id="mealTitle"></h1>
+      <p id="mealDescription"></p>
+    </div>
+    
+    <div class="meal-content">
+      <div class="meal-image">
+        <img id="mealImageLarge" src="" alt="">
+      </div>
+      <div class="meal-info">
+        <h2>Ingredients</h2>
+        <div class="ingredients-box">
+          <ul id="ingredientsList"></ul>
+        </div>
+        <h2>Measurements</h2>
+        <div class="measurements-box">
+          <ul id="measurementsList"></ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="instructions">
+      <h2>Instructions</h2>
+      <p id="mealInstructions"></p>
+    </div>
+  </section>
+
+  <script>
+    // DOM Elements
+    const hamburgerMenu = document.getElementById("hamburgerMenu");
+    const categoriesList = document.getElementById("categoriesList");
+    const closeIcon = document.getElementById("closeIcon");
+    const searchBar = document.getElementById("search-input");
+    const searchButton = document.getElementById("search-button");
+    const container = document.getElementById("mealContainer");
+    const categoriesSection = document.getElementById("categoriesSection");
+    const mealDetailsPage = document.getElementById("mealDetailsPage");
+    const backButton = document.getElementById("backButton");
+    const mealTitle = document.getElementById("mealTitle");
+    const mealDescription = document.getElementById("mealDescription");
+    const mealImageLarge = document.getElementById("mealImageLarge");
+    const ingredientsList = document.getElementById("ingredientsList");
+    const measurementsList = document.getElementById("measurementsList");
+    const mealInstructions = document.getElementById("mealInstructions");
+
+    let allCategories = [];
+    let currentView = 'categories'; // 'categories', 'meals', or 'details'
+
+    // Toggle categories menu
+    hamburgerMenu.addEventListener("click", () => {
+      categoriesList.classList.toggle("active");
+    });
+
+    closeIcon.addEventListener("click", () => {
+      categoriesList.classList.remove("active");
+    });
+
+    // Back button functionality
+    backButton.addEventListener("click", () => {
+      if (currentView === 'details') {
+        showMealsView();
+      } else {
+        showCategoriesView();
+      }
+    });
+
+    // Show categories view
+    function showCategoriesView() {
+      categoriesSection.style.display = "block";
+      mealDetailsPage.style.display = "none";
+      currentView = 'categories';
+    }
+
+    // Show meals view
+    function showMealsView() {
+      categoriesSection.style.display = "block";
+      mealDetailsPage.style.display = "none";
+      currentView = 'meals';
+    }
+
+    // Show details view
+    function showDetailsView() {
+      categoriesSection.style.display = "none";
+      mealDetailsPage.style.display = "block";
+      currentView = 'details';
+    }
+
+    // Fetch categories
+    fetch("https://www.themealdb.com/api/json/v1/1/categories.php")
+      .then((res) => res.json())
+      .then((data) => {
+        allCategories = data.categories;
+        displayCategories(allCategories);
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+
+    // Display categories
+    function displayCategories(categories) {
+      container.innerHTML = "";
+      categories.forEach((category) => {
+        const card = document.createElement("div");
+        card.className = "meal-card";
+        
+        card.innerHTML = `
+          <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
+            <img src="${category.strCategoryThumb}" class="card-img-top" alt="${category.strCategory}" 
+                 data-category="${category.strCategory}" data-description="${category.strCategoryDescription}">
+            <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
+              ${category.strCategory}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Add click event to category images
+      document.querySelectorAll('.card-img-top').forEach(img => {
+        img.addEventListener('click', (e) => {
+          const category = e.target.getAttribute('data-category');
+          const description = e.target.getAttribute('data-description');
+          fetchMealsByCategory(category, description);
+        });
+      });
+    }
+
+    // Fetch meals by category
+    function fetchMealsByCategory(category, description) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.meals) {
+            displayMeals(data.meals, category, description);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching meals by category:", error);
+        });
+    }
+
+    // Display meals in a category
+    function displayMeals(meals, category, description) {
+      container.innerHTML = `
+        <div class="col-12 mb-4">
+          <div class="meal-header">
+            <h1>${category}</h1>
+            <p>${description}</p>
+          </div>
+        </div>
+      `;
+      
+      meals.forEach(meal => {
+        const card = document.createElement("div");
+        card.className = "meal-card";
+        
+        card.innerHTML = `
+          <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
+            <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}" data-mealid="${meal.idMeal}">
+            <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
+              ${meal.strMeal}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      // Add click event to meal images
+      document.querySelectorAll('.card-img-top').forEach(img => {
+        img.addEventListener('click', (e) => {
+          const mealId = e.target.getAttribute('data-mealid');
+          fetchMealDetails(mealId);
+        });
+      });
+    }
+
+    // Fetch meal details by ID
+    function fetchMealDetails(mealId) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.meals) {
+            displayMealDetails(data.meals[0]);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching meal details:", error);
+        });
+    }
+
+    // Display meal details
+    function displayMealDetails(meal) {
+      showDetailsView();
+      
+      mealTitle.textContent = meal.strMeal;
+      mealDescription.textContent = meal.strCategory;
+      mealImageLarge.src = meal.strMealThumb;
+      
+      // Clear previous lists
+      ingredientsList.innerHTML = "";
+      measurementsList.innerHTML = "";
+      
+      // Add ingredients and measures
+      for (let i = 1; i <= 20; i++) {
+        const ingredient = meal[`strIngredient${i}`];
+        const measure = meal[`strMeasure${i}`];
+        
+        if (ingredient && ingredient.trim() !== "") {
+          const liIngredient = document.createElement("li");
+          liIngredient.textContent = ingredient;
+          ingredientsList.appendChild(liIngredient);
+          
+          const liMeasure = document.createElement("li");
+          liMeasure.textContent = measure;
+          measurementsList.appendChild(liMeasure);
+        }
+      }
+      
+      mealInstructions.textContent = meal.strInstructions;
+    }
+
+    // Search functionality
+    function handleSearch() {
+      const inputText = searchBar.value.toLowerCase().trim();
+      
+      if (inputText === "") {
+        displayCategories(allCategories);
+        return;
+      }
+      
+      // Search in categories first
+      const filteredCategories = allCategories.filter(cat =>
+        cat.strCategory.toLowerCase().includes(inputText)
+      );
+      
+      if (filteredCategories.length > 0) {
+        displayCategories(filteredCategories);
+      } else {
+        // If no categories found, search in meals
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.meals) {
+              container.innerHTML = `
+                <div class="col-12 mb-4">
+                  <div class="meal-header">
+                    <h1>Search Results for "${inputText}"</h1>
+                  </div>
+                </div>
+              `;
+              
+              data.meals.forEach(meal => {
+                const card = document.createElement("div");
+                card.className = "meal-card";
+                
+                card.innerHTML = `
+                  <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
+                    <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}" data-mealid="${meal.idMeal}">
+                    <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
+                      ${meal.strMeal}
+                    </div>
+                  </div>
+                `;
+
+                container.appendChild(card);
+              });
+
+              // Add click event to meal images
+              document.querySelectorAll('.card-img-top').forEach(img => {
+                img.addEventListener('click', (e) => {
+                  const mealId = e.target.getAttribute('data-mealid');
+                  fetchMealDetails(mealId);
+                });
+              });
+            } else {
+              container.innerHTML = `<p class="text-center">No results found for "${inputText}"</p>`;
+            }
+          })
+          .catch(error => {
+            console.error("Error searching meals:", error);
+          });
+      }
+    }
+
+    // Event listeners for search
+    searchBar.addEventListener("input", handleSearch);
+    searchButton.addEventListener("click", handleSearch);
+    searchBar.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    });
+
+    // Click on category in sidebar
+    document.querySelectorAll('#categoriesList li').forEach(item => {
+      item.addEventListener('click', () => {
+        categoriesList.classList.remove("active");
+        fetchMealsByCategory(item.textContent, "");
+      });
+    });
   </script>
-  <script src="./script.js"></script>
 
 </body>
 </html>
