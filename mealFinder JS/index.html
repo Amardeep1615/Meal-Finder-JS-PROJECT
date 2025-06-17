@@ -326,7 +326,7 @@
     <button class="back-button" id="backButton">← Back to Categories</button>
     
     <div class="meal-header">
-      <h1 id="mealTitle"></h1>
+      <!-- <h1 id="mealTitle"></h1> -->
       <p id="mealDescription"></p>
     </div>
     
@@ -373,7 +373,7 @@
     let allCategories = [];
     let currentView = 'categories'; // 'categories', 'meals', or 'details'
 
-    // Toggle categories menu
+    
     hamburgerMenu.addEventListener("click", () => {
       categoriesList.classList.toggle("active");
     });
@@ -382,7 +382,7 @@
       categoriesList.classList.remove("active");
     });
 
-    // Back button functionality
+    
     backButton.addEventListener("click", () => {
       if (currentView === 'details') {
         showMealsView();
@@ -391,21 +391,21 @@
       }
     });
 
-    // Show categories view
+    
     function showCategoriesView() {
       categoriesSection.style.display = "block";
       mealDetailsPage.style.display = "none";
       currentView = 'categories';
     }
 
-    // Show meals view
+  
     function showMealsView() {
       categoriesSection.style.display = "block";
       mealDetailsPage.style.display = "none";
       currentView = 'meals';
     }
 
-    // Show details view
+  
     function showDetailsView() {
       categoriesSection.style.display = "none";
       mealDetailsPage.style.display = "block";
