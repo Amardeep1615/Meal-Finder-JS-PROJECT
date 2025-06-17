@@ -305,7 +305,8 @@
       <div class="hero-title mt-4">
         <h2>What are your Favourite Cuisines?</h2>
       </div>
-      <div class="hero-title mt-4 text-white"><h2 class="fs-6 fw-light">PERSONALIZE YOUR EXPERIENCE</h2></div>
+      <div class="hero-title mt-4 text-white"><h2 class="fs-6 fw-light">PERSONALIZE YOUR EXPERIENCE</h2>
+      </div>
     </div>
   </section>
 
@@ -314,7 +315,9 @@
     <div class="mt-5">
       <h1 class="px-3 fs-3 fw-bold">
         C A T E G O R I E S
-        <span style="position: absolute; display: flex; flex-direction: column; height: 5px; width: 30%; background-color: red; margin-top: 10px;"></span>
+        <span style="position: absolute; display: flex; flex-direction: column; height: 5px; width: 30%; background-color: red; margin-top: 10px;">
+
+        </span>
       </h1>
     </div>
     <h3 class="text-center mb-4">Available Categories</h3>
@@ -517,7 +520,6 @@
         });
     }
 
-    // Display meal details
     function displayMealDetails(meal) {
       showDetailsView();
       
@@ -525,11 +527,11 @@
       mealDescription.textContent = meal.strCategory;
       mealImageLarge.src = meal.strMealThumb;
       
-      // Clear previous lists
+      
       ingredientsList.innerHTML = "";
       measurementsList.innerHTML = "";
       
-      // Add ingredients and measures
+      
       for (let i = 1; i <= 20; i++) {
         const ingredient = meal[`strIngredient${i}`];
         const measure = meal[`strMeasure${i}`];
@@ -548,7 +550,7 @@
       mealInstructions.textContent = meal.strInstructions;
     }
 
-    // Search functionality
+    
     function handleSearch() {
       const inputText = searchBar.value.toLowerCase().trim();
       
@@ -557,7 +559,7 @@
         return;
       }
       
-      // Search in categories first
+      
       const filteredCategories = allCategories.filter(cat =>
         cat.strCategory.toLowerCase().includes(inputText)
       );
@@ -565,7 +567,7 @@
       if (filteredCategories.length > 0) {
         displayCategories(filteredCategories);
       } else {
-        // If no categories found, search in meals
+        
         fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`)
           .then(res => res.json())
           .then(data => {
@@ -594,7 +596,7 @@
                 container.appendChild(card);
               });
 
-              // Add click event to meal images
+              
               document.querySelectorAll('.card-img-top').forEach(img => {
                 img.addEventListener('click', (e) => {
                   const mealId = e.target.getAttribute('data-mealid');
@@ -611,7 +613,7 @@
       }
     }
 
-    // Event listeners for search
+    
     searchBar.addEventListener("input", handleSearch);
     searchButton.addEventListener("click", handleSearch);
     searchBar.addEventListener("keypress", (e) => {
@@ -620,7 +622,7 @@
       }
     });
 
-    // Click on category in sidebar
+    
     document.querySelectorAll('#categoriesList li').forEach(item => {
       item.addEventListener('click', () => {
         categoriesList.classList.remove("active");
