@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Meal Finder</title>
 
-  <!-- Bootstrap CSS -->
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
@@ -136,7 +135,7 @@
       font-size: 2rem;
       margin-top: 10px;
     }
-    
+
     .meal-card {
       width: calc(20% - 12px);
       margin-bottom: 10px;
@@ -171,7 +170,6 @@
       z-index: 10;
     }
 
-    /* Meal Details Page Styles */
     .meal-details-page {
       display: none;
       padding: 20px;
@@ -211,27 +209,14 @@
       margin-bottom: 15px;
     }
 
-    .ingredients-box {
-      background-color: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .measurements-box {
-      background-color: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
+    .ingredients-box,
+    .measurements-box,
     .instructions {
       background-color: white;
       padding: 15px;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
 
     .back-button {
@@ -269,7 +254,6 @@
 </head>
 <body>
 
-  <!-- Header -->
   <header class="py-3 px-4">
     <nav class="d-flex justify-content-between align-items-center">
       <div class="logo">Meal Finder</div>
@@ -287,52 +271,32 @@
   </header>
 
   <section class="hero-section">
-    <img src="./src/Assets/foodmeal.jpg" alt="Breakfast" class="img-fluid d-block w-100" />
-
+    <img src="./src/Assets/foodmeal.jpg" alt="Meal Hero" class="img-fluid d-block w-100" />
     <div class="search-overlay">
       <div class="search-container">
         <input type="text" placeholder="Search recipes..." class="search-input" id="search-input"/>
-        <button class="search-button" id="search-button" aria-label="Search">
-          <svg xmlns="http://www.w3.org/2000/svg"
-               width="20" height="20" viewBox="0 0 24 24"
-               fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="10" cy="10" r="7"></circle>
-            <line x1="21" y1="21" x2="15" y2="15"></line>
-          </svg>
-        </button>
+        <button class="search-button" id="search-button">🔍</button>
       </div>
-
       <div class="hero-title mt-4">
         <h2>What are your Favourite Cuisines?</h2>
       </div>
-      <div class="hero-title mt-4 text-white"><h2 class="fs-6 fw-light">PERSONALIZE YOUR EXPERIENCE</h2>
+      <div class="hero-title mt-4 text-white">
+        <h2 class="fs-6 fw-light">PERSONALIZE YOUR EXPERIENCE</h2>
       </div>
     </div>
   </section>
 
-  <!-- Categories Section -->
   <section class="container my-5" id="categoriesSection">
-    <div class="mt-5">
-      <h1 class="px-3 fs-3 fw-bold">
-        C A T E G O R I E S
-        <span style="position: absolute; display: flex; flex-direction: column; height: 5px; width: 30%; background-color: red; margin-top: 10px;">
-
-        </span>
-      </h1>
-    </div>
     <h3 class="text-center mb-4">Available Categories</h3>
     <div class="row" id="mealContainer"></div>
   </section>
 
-  <!-- Meal Details Page -->
   <section class="container my-5 meal-details-page" id="mealDetailsPage">
-    <button class="back-button" id="backButton">← Back to Categories</button>
-    
+    <button class="back-button" id="backButton">← Back</button>
     <div class="meal-header">
-   
+      <h1 id="mealTitle">M</h1>
       <p id="mealDescription"></p>
     </div>
-    
     <div class="meal-content">
       <div class="meal-image">
         <img id="mealImageLarge" src="" alt="">
@@ -348,7 +312,6 @@
         </div>
       </div>
     </div>
-    
     <div class="instructions">
       <h2>Instructions</h2>
       <p id="mealInstructions"></p>
@@ -356,7 +319,6 @@
   </section>
 
   <script>
-    // DOM Elements
     const hamburgerMenu = document.getElementById("hamburgerMenu");
     const categoriesList = document.getElementById("categoriesList");
     const closeIcon = document.getElementById("closeIcon");
@@ -374,9 +336,7 @@
     const mealInstructions = document.getElementById("mealInstructions");
 
     let allCategories = [];
-    let currentView = 'categories'; // 'categories', 'meals', or 'details'
 
-    
     hamburgerMenu.addEventListener("click", () => {
       categoriesList.classList.toggle("active");
     });
@@ -385,92 +345,55 @@
       categoriesList.classList.remove("active");
     });
 
-    
     backButton.addEventListener("click", () => {
-      if (currentView === 'details') {
-        showMealsView();
-      } else {
-        showCategoriesView();
-      }
-    });
-
-    
-    function showCategoriesView() {
       categoriesSection.style.display = "block";
       mealDetailsPage.style.display = "none";
-      currentView = 'categories';
-    }
+    });
 
-  
     function showMealsView() {
       categoriesSection.style.display = "block";
       mealDetailsPage.style.display = "none";
-      currentView = 'meals';
     }
 
-  
-    function showDetailsView() {
-      categoriesSection.style.display = "none";
-      mealDetailsPage.style.display = "block";
-      currentView = 'details';
-    }
-
-    // Fetch categories
     fetch("https://www.themealdb.com/api/json/v1/1/categories.php")
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         allCategories = data.categories;
         displayCategories(allCategories);
-      })
-      .catch((error) => {
-        console.error("Error fetching categories:", error);
       });
 
-    // Display categories
     function displayCategories(categories) {
       container.innerHTML = "";
-      categories.forEach((category) => {
+      categories.forEach(category => {
         const card = document.createElement("div");
         card.className = "meal-card";
-        
         card.innerHTML = `
           <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
-            <img src="${category.strCategoryThumb}" class="card-img-top" alt="${category.strCategory}" 
+            <img src="${category.strCategoryThumb}" class="card-img-top" alt="${category.strCategory}"
                  data-category="${category.strCategory}" data-description="${category.strCategoryDescription}">
             <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
               ${category.strCategory}
             </div>
-          </div>
-        `;
-
+          </div>`;
         container.appendChild(card);
       });
 
-      // Add click event to category images
       document.querySelectorAll('.card-img-top').forEach(img => {
-        img.addEventListener('click', (e) => {
-          const category = e.target.getAttribute('data-category');
-          const description = e.target.getAttribute('data-description');
-          fetchMealsByCategory(category, description);
+        img.addEventListener('click', e => {
+          const cat = e.target.getAttribute('data-category');
+          const desc = e.target.getAttribute('data-description');
+          showMealsView();
+          fetchMealsByCategory(cat, desc);
         });
       });
     }
 
-    // Fetch meals by category
     function fetchMealsByCategory(category, description) {
       fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
         .then(res => res.json())
-        .then(data => {
-          if (data.meals) {
-            displayMeals(data.meals, category, description);
-          }
-        })
-        .catch(error => {
-          console.error("Error fetching meals by category:", error);
-        });
+        .then(data => displayMeals(data.meals, category, description));
     }
 
-    // Display meals in a category
     function displayMeals(meals, category, description) {
       container.innerHTML = `
         <div class="col-12 mb-4">
@@ -478,157 +401,87 @@
             <h1>${category}</h1>
             <p>${description}</p>
           </div>
-        </div>
-      `;
-      
+        </div>`;
       meals.forEach(meal => {
         const card = document.createElement("div");
         card.className = "meal-card";
-        
         card.innerHTML = `
           <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
             <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}" data-mealid="${meal.idMeal}">
             <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
               ${meal.strMeal}
             </div>
-          </div>
-        `;
-
+          </div>`;
         container.appendChild(card);
       });
 
-      // Add click event to meal images
       document.querySelectorAll('.card-img-top').forEach(img => {
-        img.addEventListener('click', (e) => {
-          const mealId = e.target.getAttribute('data-mealid');
-          fetchMealDetails(mealId);
+        img.addEventListener('click', e => {
+          const id = e.target.getAttribute('data-mealid');
+          fetchMealDetails(id);
         });
       });
     }
 
-    // Fetch meal details by ID
-    function fetchMealDetails(mealId) {
-      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+    function fetchMealDetails(id) {
+      fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
         .then(res => res.json())
-        .then(data => {
-          if (data.meals) {
-            displayMealDetails(data.meals[0]);
-          }
-        })
-        .catch(error => {
-          console.error("Error fetching meal details:", error);
-        });
+        .then(data => displayMealDetails(data.meals[0]));
     }
 
     function displayMealDetails(meal) {
-      showDetailsView();
-      
+      categoriesSection.style.display = "none";
+      mealDetailsPage.style.display = "block";
       mealTitle.textContent = meal.strMeal;
       mealDescription.textContent = meal.strCategory;
       mealImageLarge.src = meal.strMealThumb;
-      
-      
       ingredientsList.innerHTML = "";
       measurementsList.innerHTML = "";
-      
-      
       for (let i = 1; i <= 20; i++) {
-        const ingredient = meal[`strIngredient${i}`];
-        const measure = meal[`strMeasure${i}`];
-        
-        if (ingredient && ingredient.trim() !== "") {
-          const liIngredient = document.createElement("li");
-          liIngredient.textContent = ingredient;
-          ingredientsList.appendChild(liIngredient);
-          
-          const liMeasure = document.createElement("li");
-          liMeasure.textContent = measure;
-          measurementsList.appendChild(liMeasure);
+        const ing = meal[`strIngredient${i}`]?.trim();
+        const meas = meal[`strMeasure${i}`]?.trim();
+        if (ing) {
+          const li1 = document.createElement("li");
+          li1.textContent = ing;
+          ingredientsList.appendChild(li1);
+          if (meas) {
+            const li2 = document.createElement("li");
+            li2.textContent = meas;
+            measurementsList.appendChild(li2);
+          }
         }
       }
-      
       mealInstructions.textContent = meal.strInstructions;
     }
 
-    
-    function handleSearch() {
-      const inputText = searchBar.value.toLowerCase().trim();
-      
-      if (inputText === "") {
-        displayCategories(allCategories);
-        return;
-      }
-      
-      
-      const filteredCategories = allCategories.filter(cat =>
-        cat.strCategory.toLowerCase().includes(inputText)
-      );
-      
-      if (filteredCategories.length > 0) {
-        displayCategories(filteredCategories);
-      } else {
-        
-        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.meals) {
-              container.innerHTML = `
-                <div class="col-12 mb-4">
-                  <div class="meal-header">
-                    <h1>Search Results for "${inputText}"</h1>
-                  </div>
-                </div>
-              `;
-              
-              data.meals.forEach(meal => {
-                const card = document.createElement("div");
-                card.className = "meal-card";
-                
-                card.innerHTML = `
-                  <div class="card shadow-sm p-2 position-relative rounded-3 overflow-hidden">
-                    <img src="${meal.strMealThumb}" class="card-img-top" alt="${meal.strMeal}" data-mealid="${meal.idMeal}">
-                    <div class="promo-banner position-absolute top-0 end-0 text-white px-2 py-1">
-                      ${meal.strMeal}
-                    </div>
-                  </div>
-                `;
-
-                container.appendChild(card);
-              });
-
-              
-              document.querySelectorAll('.card-img-top').forEach(img => {
-                img.addEventListener('click', (e) => {
-                  const mealId = e.target.getAttribute('data-mealid');
-                  fetchMealDetails(mealId);
-                });
-              });
-            } else {
-              container.innerHTML = `<p class="text-center">No results found for "${inputText}"</p>`;
-            }
-          })
-          .catch(error => {
-            console.error("Error searching meals:", error);
-          });
-      }
-    }
-
-    
-    searchBar.addEventListener("input", handleSearch);
-    searchButton.addEventListener("click", handleSearch);
-    searchBar.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        handleSearch();
-      }
-    });
-
-    
     document.querySelectorAll('#categoriesList li').forEach(item => {
       item.addEventListener('click', () => {
         categoriesList.classList.remove("active");
+        showMealsView();
         fetchMealsByCategory(item.textContent, "");
       });
     });
+
+    searchButton.addEventListener("click", handleSearch);
+    searchBar.addEventListener("input", handleSearch);
+    searchBar.addEventListener("keypress", e => {
+      if (e.key === "Enter") handleSearch();
+    });
+
+    function handleSearch() {
+      const inputText = searchBar.value.toLowerCase().trim();
+      if (!inputText) return displayCategories(allCategories);
+      const filtered = allCategories.filter(cat => cat.strCategory.toLowerCase().includes(inputText));
+      if (filtered.length) displayCategories(filtered);
+      else {
+        fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${inputText}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.meals) displayMeals(data.meals, `Search "${inputText}"`, "");
+            else container.innerHTML = `<p class="text-center">No results for "${inputText}".</p>`;
+          });
+      }
+    }
   </script>
 
 </body>
