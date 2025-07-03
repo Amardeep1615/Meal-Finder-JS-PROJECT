@@ -1,5 +1,39 @@
 
-    function fetchMealDetails(id) {
+  // Get references to all needed DOM elements
+const hamburgerMenu = document.getElementById("hamburgerMenu");
+const categoriesList = document.getElementById("categoriesList");
+const closeIcon = document.getElementById("closeIcon");
+const searchBar = document.getElementById("search-input");
+const searchButton = document.getElementById("search-button");
+const container = document.getElementById("mealContainer");
+const categoriesSection = document.getElementById("categoriesSection");
+const mealDetailsPage = document.getElementById("mealDetailsPage");
+const backButton = document.getElementById("backButton");
+const mealTitle = document.getElementById("mealTitle");
+const mealDescription = document.getElementById("mealDescription");
+const mealImageLarge = document.getElementById("mealImageLarge");
+const ingredientsList = document.getElementById("ingredientsList");
+const measurementsList = document.getElementById("measurementsList");
+const mealInstructions = document.getElementById("mealInstructions");
+
+// Store all fetched categories
+let allCategories = [];
+
+// Toggle hamburger menu visibility
+hamburgerMenu.addEventListener("click", () => {
+  categoriesList.classList.toggle("active");
+});
+
+// Close the hamburger menu
+closeIcon.addEventListener("click", () => {
+  categoriesList.classList.remove("active");
+});
+
+// Back button hides details page
+ 
+   
+   
+   function fetchMealDetails(id) {
       fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
         .then(res => res.json())
         .then(data => displayMealDetails(data.meals[0]));
